@@ -8,8 +8,8 @@ public class UIMG : MonoBehaviour
     public static UIMG instance;
     [SerializeField] TMPro.TextMeshProUGUI healthText;
     [SerializeField] TMPro.TextMeshProUGUI pointsText; 
+    [SerializeField] TMPro.TextMeshProUGUI multiplierText; 
     [SerializeField] Transform player;
-    public int playerPoints = 0;
     private void Awake()
     {
         instance = this;
@@ -18,14 +18,15 @@ public class UIMG : MonoBehaviour
     {
         //pointsText.text = pointsText.text + GetComponent<StarshipLifeManager>().starshipHP.ToString();
         healthText.text = "Player HP: " + player.gameObject.GetComponent<StarshipLifeManager>().starshipHP.ToString(); 
-        Debug.Log(healthText.text);
     }
-    public void AddPoint()
+    public void UpdateScore(float score)
     {
-        ++playerPoints;
+        pointsText.text = "Score: " + ((int)score).ToString(); 
     }
-    public void UpdatePoints()
+
+    public void UpdateMultiplier(float combo)
     {
-        pointsText.text = "Points: " + playerPoints.ToString(); 
+        multiplierText.text = "Score multiplier:" + combo.ToString(); 
     }
+    
 }

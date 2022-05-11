@@ -9,13 +9,7 @@ public class StarshipShooting : MonoBehaviour
     [SerializeField] Transform projectilePrefab;
     [SerializeField] float shootSpeed = 1f;
     [SerializeField] Transform shootPosition;
-    bool isGame = false;
     bool canShoot = true;
-    bool isShooting = false;
-    void Start()
-    {
-        isGame = true;
-    }
 
     void Update()
     {
@@ -25,14 +19,10 @@ public class StarshipShooting : MonoBehaviour
     void Shoot()
     {
         if (Input.GetButton("Fire1")){
-            isShooting = false;
             if (canShoot){
                 SpawnBullet();
                 StartCoroutine(ShootDelay());
             }
-        }
-        else {
-            isShooting = true;
         }
     }
     // szybka funkcja do stworzenia pocisku

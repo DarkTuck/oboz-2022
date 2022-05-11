@@ -5,11 +5,13 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class ProjectileScript : MonoBehaviour
 {
-    // trzeba podczepiæ do prefabu pocisku
-    // skrypt odpowiadaj¹cy za przesuniêce zrespawnowany bullet a potem za jego zniszczenie
+    // trzeba podczepiï¿½ do prefabu pocisku
+    // skrypt odpowiadajï¿½cy za przesuniï¿½ce zrespawnowany bullet a potem za jego zniszczenie
     [SerializeField] float moveSpeed = 10f;
     Rigidbody rb;
     [SerializeField] Transform hitParticlesPrefab;
+    [SerializeField] Transform enemyParticlesPrefab;
+    [SerializeField] Transform enemyShootParticlePrefab;
     private float timer;
     [SerializeField] private float timeUntilProjectileDestroy = 1.5f;
     void Start()
@@ -19,7 +21,7 @@ public class ProjectileScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Vector3.forward * -1 = Vector3 do ty³u
+        // Vector3.forward * -1 = Vector3 do tyï¿½u
         rb.MovePosition(transform.position - -transform.forward * moveSpeed);
     }
     private void Update()
@@ -35,8 +37,19 @@ public class ProjectileScript : MonoBehaviour
         if (other.gameObject.tag == "Asteroid")
         {
             Instantiate(hitParticlesPrefab, transform.position, transform.rotation);
-            GM.instance.destroyAsteroids(other);
-            UIMG.instance.UpdatePoints();
+            GM.instance.OnBulletHitAsteroid(other);
+            Destroy(gameObject);
+        }
+        if (other.gameObject.tag == "Enemy")
+        {
+            Instantiate(enemyParticlesPrefab, transform.position, transform.rotation);
+            GM.instance.OnBulletHitEnemy(other);
+            Destroy(gameObject);
+        }
+        if (other.gameObject.tag == "Player")
+        {
+            Instantiate(enemyShootParticlePrefab, transform.position, transform.rotation);
+            GM.instance.playerTakeBulletDamage();
             Destroy(gameObject);
         }
     }

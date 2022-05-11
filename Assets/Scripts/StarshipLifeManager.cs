@@ -9,10 +9,26 @@ public class StarshipLifeManager : MonoBehaviour
     {
         if(collision.gameObject.tag == "Asteroid")
         {
-            starshipHP -= 10;
-            Destroy(collision.gameObject);
-            UIMG.instance.UpdatePlayerHealth();
-            Debug.Log(starshipHP);
+            TakeDamage(10);
+            Destroy(collision.gameObject); // add asteroid split effect
         }
+    }
+
+    public void TakeDamage(int dmg)
+    {
+        starshipHP -= dmg;
+        UIMG.instance.UpdatePlayerHealth();
+
+        if (starshipHP <= 0)
+        {
+            OnPlayerDied();
+        }
+    }
+
+    void OnPlayerDied()
+    {
+        // Player died
+        GM.instance.AfterPlayerDied();
+        gameObject.SetActive(false);
     }
 }

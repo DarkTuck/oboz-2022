@@ -5,21 +5,74 @@ using UnityEngine;
 public class GM : MonoBehaviour
 {
     // GameManager
-    // trzeba stworzyæ empty object na mapie który bêdzie GMem i podpi¹æ ten skrypt tam
-    // linijki tworz¹ce singleton
+    // trzeba stworzyï¿½ empty object na mapie ktï¿½ry bï¿½dzie GMem i podpiï¿½ï¿½ ten skrypt tam
+    // linijki tworzï¿½ce singleton
     public static GM instance;
+    [SerializeField] StarshipLifeManager playerLifeMgr;
+    [SerializeField] private float enemySpawnRate = 2F;
+    [SerializeField] private EnemiesManager m_EnemiesManager;
+    [SerializeField] int enemyDealDamage = 10;
+    float score = 0;
+    float scoreMultiplier = 1;
     void Awake()
     {
         instance = this;
     }
-    //Skrypt do niszczenia asteroid
-    public void destroyAsteroids(Collider other)
+    private void Start()
     {
-        // Asteroid to skrypt który jest przyczepiony to prefabu asteroidu, skrypt asteroidy musi mieæ w sobie: public int hp
+        StartCoroutine(EnemySpawner()); 
+        UIMG.instance.UpdateScore(score);
+        UIMG.instance.UpdateMultiplier(scoreMultiplier);
+    }
+    //Skrypt do niszczenia asteroid
+    public void OnBulletHitAsteroid(Collider other)
+    {
+        // Asteroid to skrypt ktï¿½ry jest przyczepiony to prefabu asteroidu, skrypt asteroidy musi mieï¿½ w sobie: public int hp
         other.GetComponent<AsteroidScript>().hp -= 1;
         if (other.gameObject.GetComponent<AsteroidScript>().hp <= 0){
             Destroy(other.gameObject);
-            UIMG.instance.AddPoint();
+
+            scoreMultiplier += 0.1F;
+            UIMG.instance.UpdateMultiplier(scoreMultiplier);
         }
+    }
+    public void Moved1Meter()
+    {
+        score += 1F * scoreMultiplier;
+        UIMG.instance.UpdateScore(score);
+    }    
+
+    public void AsteroidEscaped()
+    {
+        scoreMultiplier = 1F;
+        UIMG.instance.UpdateMultiplier(scoreMultiplier);
+    }
+
+    IEnumerator EnemySpawner()
+    {
+        while (true)
+        {
+            m_EnemiesManager.SpawnEnemy();
+            yield return new WaitForSeconds(1 / enemySpawnRate);
+        }
+    }
+    public void playerTakeBulletDamage()
+    {
+        playerLifeMgr.TakeDamage(enemyDealDamage);
+    }
+    public void OnBulletHitEnemy(Collider other)
+    {
+        other.GetComponent<EnemyController>().hp -= 1;
+        if(other.GetComponent<EnemyController>().hp <= 0)
+        {
+            Destroy(other.gameObject);
+            score += 2 * scoreMultiplier;
+
+            UIMG.instance.UpdateScore(score);
+        }
+    }
+    public void AfterPlayerDied()
+    {
+        m_EnemiesManager.StopShooting();
     }
 }

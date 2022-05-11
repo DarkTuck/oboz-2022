@@ -36,12 +36,22 @@ public class TunnelManager : MonoBehaviour
         latestPartIndex = partsCount-1;
         
         StartCoroutine(ReuseParts());
+        StartCoroutine(Every1Meter());
     }
 
     // Update is called once per frame
     void Update()
     {   
         transform.position -= new Vector3(0, 0, offset * speed * Time.deltaTime);
+    }
+
+    IEnumerator Every1Meter()
+    {
+        while (true)
+        {
+            GM.instance.Moved1Meter();
+            yield return new WaitForSeconds(1 /  offset * speed);
+        }
     }
     
     IEnumerator ReuseParts()
@@ -60,6 +70,8 @@ public class TunnelManager : MonoBehaviour
                         activeParts[i].GetChild(j).GetComponent<MeshRenderer>().sharedMaterials = tunnelPrefab[partIndex].GetChild(j).GetComponent<MeshRenderer>().sharedMaterials;
                         
                     }
+
+                    GM.instance.AsteroidEscaped();
 
                     activeParts[i].position = activeParts[latestPartIndex].position + new Vector3(0, 0, offset);
                     latestPartIndex = i;
