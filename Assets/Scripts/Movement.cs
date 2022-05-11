@@ -19,12 +19,13 @@ public class Movement : MonoBehaviour
     }
     void Update()
     {
-        if(transform.position.y <= ceillingCap) { 
-            StarshipMovement();
-        } else
-        {
-            rb.AddForce(Vector3.down * cellingPush, ForceMode.Impulse);
-        }
+        //if(transform.position.y <= ceillingCap) { 
+            //
+        //} else
+        //{
+            //rb.AddForce(Vector3.down * cellingPush, ForceMode.Impulse);
+        //}
+        StarshipMovement();
     }
     void StarshipMovement()
     {

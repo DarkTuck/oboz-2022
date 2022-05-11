@@ -19,7 +19,7 @@ public class GM : MonoBehaviour
         other.GetComponent<AsteroidScript>().hp -= 1;
         if (other.gameObject.GetComponent<AsteroidScript>().hp <= 0){
             Destroy(other.gameObject);
-            Debug.Log("Destroyed asteroid");
+            UIMG.instance.AddPoint();
         }
     }
 }

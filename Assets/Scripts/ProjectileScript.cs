@@ -35,8 +35,8 @@ public class ProjectileScript : MonoBehaviour
         if (other.gameObject.tag == "Asteroid")
         {
             Instantiate(hitParticlesPrefab, transform.position, transform.rotation);
-            Debug.Log("Hit asteroid");
             GM.instance.destroyAsteroids(other);
+            UIMG.instance.UpdatePoints();
             Destroy(gameObject);
         }
     }
