@@ -68,8 +68,12 @@ MonoBehaviour:
   moveSpeed: 0.8
   fireRate: 0.5
   cutoffZ: -24
+  canShoot: 1
   playerRb: {fileID: 0}
   projectilePrefab: {fileID: 4386593100570688887, guid: b865d85601497104b950746a1981bcf3, type: 3}
+  destructionParticles: {fileID: 5666834765674622144, guid: 33218a86e192162df8146394674b1bce, type: 3}
+  timeToKamikaze: 8
+  kamikazeSpeed: 20
 --- !u!65 &1378839624
 BoxCollider:
   m_ObjectHideFlags: 0

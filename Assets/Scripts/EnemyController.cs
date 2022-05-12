@@ -11,11 +11,23 @@ public class EnemyController : MonoBehaviour
     public bool canShoot = true;
     [HideInInspector] public Rigidbody playerRb;
     [SerializeField] Transform projectilePrefab;
+    [SerializeField] Transform destructionParticles;
+    [SerializeField] float timeToKamikaze = 8F;
+    [SerializeField] float kamikazeSpeed = 8F;
     Rigidbody thisRb;
+    int secPassed = 0;
+    bool isKamikaze = false;
     void Start()
     {
         thisRb = GetComponent<Rigidbody>();
         StartCoroutine(ShootLoop());
+        StartCoroutine(CountSeconds());
+    }
+
+    public void OnCrashed()
+    {
+        Instantiate(destructionParticles, transform.position, transform.rotation);
+        Destroy(gameObject);
     }
 
     IEnumerator ShootLoop()
@@ -27,16 +39,41 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    IEnumerator CountSeconds()
+    {
+        while (secPassed < timeToKamikaze)
+        {
+            secPassed++;
+            yield return new WaitForSeconds(1);
+        }
+
+        StopCoroutine(ShootLoop());
+        isKamikaze = true;
+    }
+    
     void FixedUpdate()
     {
         Vector3 moveDir = playerRb.transform.position - transform.position;
-        moveDir = new Vector3(moveDir.x, moveDir.y + 1, 0);
-        thisRb.MovePosition(transform.position + moveDir * moveSpeed* Time.fixedDeltaTime);
+        float speed = kamikazeSpeed; // often overriten in next if
+
+        if (!isKamikaze)
+        {
+            moveDir = new Vector3(moveDir.x, moveDir.y , 0);
+            speed = moveSpeed;
+        }
+        
+        thisRb.MovePosition(transform.position + moveDir * speed * Time.fixedDeltaTime);
+
+        if (thisRb.transform.position.z < -8F)
+        {
+            OnCrashed();
+        }
     }
 
     void Shoot()
     {
         Vector3 pos = transform.position + transform.forward;
-        Instantiate(projectilePrefab, pos, transform.rotation);
+        Transform bulletT = Instantiate(projectilePrefab, pos, transform.rotation);
+        bulletT.gameObject.GetComponent<ProjectileScript>().isPlayerProjectile = false;
     }
 }

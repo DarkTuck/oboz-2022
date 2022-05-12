@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    // podczepiamy pod main kamerê
-    [SerializeField] private Transform target;
+    // podczepiamy pod main kamerï¿½
+    [HideInInspector] public Transform target;
     [SerializeField] private float smoothSpeed = 10f;
-    // polecam domyœlny offset 0;5.47;-10
+    // polecam domyï¿½lny offset 0;5.47;-10
     [SerializeField] private Vector3 offset;
     private void FixedUpdate()
     {
-        // to odpowiada za wysmuklenie przesuniêcia kamery
+        // to odpowiada za wysmuklenie przesuniï¿½cia kamery
         Vector3 desiredPosition = target.position + offset;
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
-        // trzeba to naprawiæ bo transform.position nie respektuje colliderów, wiêc mo¿na patrzeæ przez sufit
-        // trzeba u¿yæ transform.Translate albo RigidBody.MovePosition
+        // trzeba to naprawiï¿½ bo transform.position nie respektuje colliderï¿½w, wiï¿½c moï¿½na patrzeï¿½ przez sufit
+        // trzeba uï¿½yï¿½ transform.Translate albo RigidBody.MovePosition
         transform.position = smoothedPosition;
     }
 }

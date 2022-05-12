@@ -5,6 +5,10 @@ using UnityEngine;
 public class TunnelManager : MonoBehaviour
 {
     [SerializeField] Transform[] tunnelPrefab;
+    [SerializeField] Transform[] biome1;    
+    [SerializeField] Transform[] biome2;
+    [SerializeField] Transform[] biome3;
+    [SerializeField] Transform[] biome4;
     [SerializeField] int partIndex = 0; // currently change in runtime has no effect
     [SerializeField] int partsCount = 10;
     [SerializeField] int biomeSize = 20;
@@ -28,7 +32,7 @@ public class TunnelManager : MonoBehaviour
         // Spawn initial tunnel parts
         for (int i = 0; i < partsCount; i++)
         {
-            Transform newObject= Instantiate(tunnelPrefab[partIndex], new Vector3(0, 0, startZ + i * offset), Quaternion.identity);
+            Transform newObject = Instantiate(GetCurrentBiomePart(), new Vector3(0, 0, startZ + i * offset), Quaternion.identity);
             newObject.parent = transform;
             activeParts.Add(newObject);
         }
@@ -37,6 +41,29 @@ public class TunnelManager : MonoBehaviour
         
         StartCoroutine(ReuseParts());
         StartCoroutine(Every1Meter());
+    }
+
+    Transform GetCurrentBiomePart()
+    {
+        Transform partTrans = biome1[0]; //default value
+            int variation = Random.Range(0, biome1.Length-1);
+
+            switch(partIndex) 
+            {
+            case 0:
+                partTrans = biome1[variation];
+                break;
+            case 1:
+                partTrans = biome2[variation];
+                break;
+            case 2:
+                partTrans = biome3[variation];
+                break;
+            case 3:
+                partTrans = biome4[variation];
+                break;
+            }
+            return partTrans;
     }
 
     // Update is called once per frame
@@ -66,8 +93,8 @@ public class TunnelManager : MonoBehaviour
                     for (int j = 0; j < activeParts[i].childCount; j++)
                     {
                         // Update mesh filter & mesh renderer material
-                        activeParts[i].GetChild(j).GetComponent<MeshFilter>().sharedMesh = tunnelPrefab[partIndex].GetChild(j).GetComponent<MeshFilter>().sharedMesh;   
-                        activeParts[i].GetChild(j).GetComponent<MeshRenderer>().sharedMaterials = tunnelPrefab[partIndex].GetChild(j).GetComponent<MeshRenderer>().sharedMaterials;
+                        activeParts[i].GetChild(j).GetComponent<MeshFilter>().sharedMesh = GetCurrentBiomePart().GetChild(j).GetComponent<MeshFilter>().sharedMesh;   
+                        activeParts[i].GetChild(j).GetComponent<MeshRenderer>().sharedMaterials = GetCurrentBiomePart().GetChild(j).GetComponent<MeshRenderer>().sharedMaterials;
                         
                     }
 

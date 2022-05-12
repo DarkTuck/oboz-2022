@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemiesManager : MonoBehaviour
 {
     [SerializeField] Transform enemyPrefab;
-    [SerializeField] Rigidbody playerRb;
+    [HideInInspector] public Rigidbody playerRb;
     [SerializeField] float distanceZ = 7F;
     [SerializeField] float minX = -8F;
     [SerializeField] float maxX = 8F;

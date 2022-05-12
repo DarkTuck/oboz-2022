@@ -5,9 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Asteroid
-  - Enemy
   - Tunnel
-  - Bullet
+  - Enemy
   layers:
   - Default
   - TransparentFX

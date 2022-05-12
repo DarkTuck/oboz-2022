@@ -9,19 +9,27 @@ public class StarshipShooting : MonoBehaviour
     [SerializeField] Transform projectilePrefab;
     [SerializeField] float shootSpeed = 1f;
     [SerializeField] Transform shootPosition;
+    private int baseMagazineVal;
+    [SerializeField] float reloadTime = 2F;
     bool canShoot = true;
 
+    private void Start()
+    {
+        baseMagazineVal = GM.instance.rifleMagazine;
+    }
     void Update()
     {
         Shoot();
     }
-    // zmienne isGame, isShooting mog¹ przydaæ siê w póŸniejszych zmianach skryptu
+    // zmienne isGame, isShooting mogï¿½ przydaï¿½ siï¿½ w pï¿½niejszych zmianach skryptu
     void Shoot()
     {
         if (Input.GetButton("Fire1")){
-            if (canShoot){
+            if (canShoot)
+            {
                 SpawnBullet();
                 StartCoroutine(ShootDelay());
+                UIMG.instance.UpdatePlayerMagazine();
             }
         }
     }
@@ -29,10 +37,19 @@ public class StarshipShooting : MonoBehaviour
     void SpawnBullet(){
         Instantiate(projectilePrefab, shootPosition.position, transform.rotation);
     }
-    // korutyna odpowiadaj¹ca za strike rate pocisków
+    // korutyna odpowiadajï¿½ca za strike rate pociskï¿½w
     private IEnumerator ShootDelay(){
         canShoot = false;
-        yield return new WaitForSeconds(1 / shootSpeed);
-        canShoot = true;
+        if(GM.instance.rifleMagazine <= 0)
+        {
+            GM.instance.rifleMagazine = baseMagazineVal;
+            yield return new WaitForSeconds(reloadTime);
+            canShoot = true;
+        }else
+        {
+            GM.instance.rifleMagazine--;
+            yield return new WaitForSeconds(1 / shootSpeed);
+            canShoot = true;
+        }
     }
 }

@@ -14,9 +14,12 @@ public class ProjectileScript : MonoBehaviour
     [SerializeField] Transform enemyShootParticlePrefab;
     private float timer;
     [SerializeField] private float timeUntilProjectileDestroy = 1.5f;
+    [HideInInspector] public bool isPlayerProjectile = true;
+
     void Start()
     {
-         rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
+        StartCoroutine(DestroyTimeout());
     }
 
     void FixedUpdate()
@@ -24,18 +27,26 @@ public class ProjectileScript : MonoBehaviour
         // Vector3.forward * -1 = Vector3 do ty�u
         rb.MovePosition(transform.position - -transform.forward * moveSpeed);
     }
-    private void Update()
+    IEnumerator DestroyTimeout()
     {
-        // timer liczy czas do zniszczenia
-        timer += Time.deltaTime;
-        if (timer >= timeUntilProjectileDestroy)
-            Destroy(gameObject);
+        yield return new WaitForSeconds(timeUntilProjectileDestroy);
+        if (isPlayerProjectile)
+        {
+            GM.instance.combo = 0;
+        }
+        Destroy(gameObject);
     }
+
     private void OnTriggerEnter(Collider other)
     {
         // spawnowanie particli
         if (other.gameObject.tag == "Asteroid")
         {
+            if (isPlayerProjectile)
+            {
+                GM.instance.combo += 1;
+            }
+
             Instantiate(hitParticlesPrefab, transform.position, transform.rotation);
             GM.instance.OnBulletHitAsteroid(other);
             Destroy(gameObject);

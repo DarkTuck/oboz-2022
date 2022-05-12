@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e35ba16e745eebc4ca4ba8559a6c1fd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0.5
+  moveSpeed: 1
   hitParticlesPrefab: {fileID: 8170863858617177765, guid: 462d7f23abf36b24eab620f66b17da49, type: 3}
   enemyParticlesPrefab: {fileID: 5666834765674622144, guid: 8d5d098adfef909409d72e41b824bbb4, type: 3}
   enemyShootParticlePrefab: {fileID: 6771030334118761931, guid: fc2a4cadd71f9ff4490f0bc6d3ea2746, type: 3}
